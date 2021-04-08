@@ -16,9 +16,9 @@ router.post('/', async (req, res) => {
           international: req.body.flight.international,
           userId: req.body.userId
       })
-      res.status(200).json(result)
+      res.status(200).json({ message: 'Flight created successfully.', result })
     } catch (err) {
-        res.status(500).json({ error: err })
+        res.status(500).json({ message: 'Flight was not created.', error: err })
     }
 })
 
@@ -28,11 +28,13 @@ router.post('/', async (req, res) => {
 router.get("/", async (req, res) => {
     try {
         const all = await Flight.findAll()
-        if (all.length === 0)
-            return res.status(200).json({ message: "No flights were found! Try creating one." })
-        res.status(200).json(all)
+        if (all.length === 0) {
+            res.status(404).json({ message: "No flights were found! Try creating one." })
+        } else {
+            res.status(200).json(all)
+        }
     } catch (err) {
-        res.status(500).json({ error: err })
+        res.status(500).json({ message: 'Error retrieving flights.', error: err })
     }
 })
 
@@ -43,9 +45,11 @@ router.get('/:id', async (req, res) => {
     const { id } = req.params
     try {
       const one = await Flight.findAll({ where: { id: id }})
-      if (one.length === 0)
-        return res.status(200).json({ message: "No flights were found! Try creating one." })
-      res.status(200).json(one)
+      if (one.length === 0) {
+          res.status(404).json({ message: "No flights were found! Try creating one." })
+      } else {
+          res.status(200).json(one)
+      }
     } catch (err) {
       res.status(500).json({ error: err })
     }
@@ -68,9 +72,9 @@ router.put('/:id', async (req, res) => {
       }
       const result = await Flight.update(update, { where: { id: id } })
       if (result[0] === 0) {
-        return res.status(404).json({ message: "No flight found.", result: result })
+          res.status(404).json({ message: "No flight found.", result: result })
       } else {
-        return res.status(200).json({ message: "Your flight has been updated.", update: update })
+          res.status(200).json({ message: "Your flight has been updated.", update: update })
       }
     } catch (err) {
         res.status(500).json({ error: err })

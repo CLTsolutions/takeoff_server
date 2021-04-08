@@ -3,19 +3,20 @@ const Express = require('express')
 const app = Express()
 const db = require('./db')
 
+app.use(require("./middleware/headers"))
 const controllers = require('./controllers/index')
 
 app.use(Express.json())
 
 // controllers
 app.use('/user', controllers.User)
-app.use('/review', controllers.Review)
 
 // app.use(cors())
 // app.use(require("./middleware/validate-jwt"))
 // app.use('/flight', middleware.ValidateJWT, controllers.flightC)
 // app.use('/review', middleware.ValidateJWT, controllers.reviewC)
 app.use('/flight', controllers.Flight)
+app.use('/review', controllers.Review)
 
 db.authenticate()
     .then(() => db.sync())

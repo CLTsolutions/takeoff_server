@@ -23,7 +23,7 @@ module.exports = db.define('flight', {
         allowNull: false
     },
     flightTime: {
-        type: DataTypes.STRING,
+        type: DataTypes.TIME,
     },
     international: {
         type: DataTypes.BOOLEAN,

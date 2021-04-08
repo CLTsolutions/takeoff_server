@@ -11,8 +11,8 @@ Review.belongsTo(User) //sets up extra column
 User.hasMany(Flight)
 Flight.belongsTo(User)
 
-Flight.hasOne(Review)
-Review.belongsTo(Flight)
+// Flight.hasOne(Review)
+// Review.belongsTo(Flight)
 
 // Flight.hasOne(User)
 // User.belongsTo(Flight)
