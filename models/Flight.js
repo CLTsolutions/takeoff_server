@@ -28,5 +28,9 @@ module.exports = db.define('flight', {
     international: {
         type: DataTypes.BOOLEAN,
         allowNull: false
+    },
+    date: {
+        type: DataTypes.DATEONLY,
+        allowNull: false
     }
 })

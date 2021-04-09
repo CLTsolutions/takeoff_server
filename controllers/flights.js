@@ -14,11 +14,36 @@ router.post('/', async (req, res) => {
           flightMiles: req.body.flight.flightMiles,
           flightTime: req.body.flight.flightTime,
           international: req.body.flight.international,
+          date: req.body.flight.date,
           userId: req.body.userId
       })
       res.status(200).json({ message: 'Flight created successfully.', result })
     } catch (err) {
         res.status(500).json({ message: 'Flight was not created.', error: err })
+    }
+})
+
+/**********************
+  * GET ALL BY USER *
+***********************/
+// 'uid' so I remember grabbing by user id, NOT flight id
+router.get('/user/:uid', async (req, res) => {
+    const { uid } = req.params
+    try {
+        // eager loading (1 query instead of 2 (fast performance))
+        const user = await User.findOne({ 
+            where: { id: uid },
+            include: Flight
+        })
+        if (user === null) {
+            res.status(404).json({ message: 'User not found.' })
+        } else if (user.flights.length === 0) {
+            res.status(404).json({ message: "User has no flights. Try creating one." })
+        } else {
+            res.status(200).json(user)
+        }
+    } catch (err) {
+        res.status(500).json({ message: 'Error retrieving flights.', error: err })
     }
 })
 
@@ -46,7 +71,7 @@ router.get('/:id', async (req, res) => {
     try {
       const one = await Flight.findAll({ where: { id: id }})
       if (one.length === 0) {
-          res.status(404).json({ message: "No flights were found! Try creating one." })
+          res.status(404).json({ message: "No flight found! Try creating one." })
       } else {
           res.status(200).json(one)
       }
@@ -68,7 +93,8 @@ router.put('/:id', async (req, res) => {
           destAirport: req.body.flight.destAirport,
           flightMiles: req.body.flight.flightMiles,
           flightTime: req.body.flight.flightTime,
-          international: req.body.flight.international
+          international: req.body.flight.international,
+          date: req.body.flight.date,
       }
       const result = await Flight.update(update, { where: { id: id } })
       if (result[0] === 0) {
