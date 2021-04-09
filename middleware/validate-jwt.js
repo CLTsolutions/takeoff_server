@@ -1,14 +1,14 @@
-const jwt = require("jsonwebtoken");
-const { UserModel } = require("../models");
+const jwt = require("jsonwebtoken")
+const { User } = require("../models")
 
-const validateJWT = async (req, res, next) => {
+const validateSession = async (req, res, next) => {
     if (req.method == "OPTIONS") {
-        next(); 
+        next()
     } else if (
         req.headers.authorization &&
         req.headers.authorization.includes("Bearer")
     ) {
-        const { authorization } = req.headers;
+        const { authorization } = req.headers
         const payload = authorization
           ? jwt.verify(
               authorization.includes("Bearer")
@@ -16,23 +16,23 @@ const validateJWT = async (req, res, next) => {
                 : authorization,
               process.env.JWT_SECRET
             )
-          : undefined;
+          : undefined
+        //   console.log(payload)
 
         if (payload) {
-            let foundUser = await UserModel.findOne({ where: { id: payload.id } });
-            
+            const foundUser = await User.findOne({ where: { id: payload.id } })
             if (foundUser) {
-                req.user = foundUser;
-                next();
+                req.user = foundUser
+                next()
             } else {
-                res.status(400).send({ message: "Not Authorized" });
+                res.status(400).send({ message: "Not Authorized" })
             }
         } else {
-            res.status(401).send({ message: "Invalid token" });
+            res.status(401).send({ message: "Invalid token" })
         }
     } else {
-        res.status(403).send({ message: "Forbidden" });
+        res.status(403).send({ message: "Forbidden" })
     }
-};
+}
 
-module.exports = validateJWT;
+module.exports = validateSession

@@ -30,7 +30,7 @@ router.post('/', async (req, res) => {
 router.get('/user/:uid', async (req, res) => {
     const { uid } = req.params
     try {
-        // eager loading (1 query instead of 2 (fast performance))
+        // eager loading (1 query instead of 2 (faster performance))
         const user = await User.findOne({ 
             where: { id: uid },
             include: Flight
