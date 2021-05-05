@@ -8,29 +8,31 @@ module.exports = db.define('flight', {
     },
     flightNumber: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: true
     },
     originAirport: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
     },
     destAirport: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
     },
     flightMiles: {
-        type: DataTypes.STRING,
-        allowNull: false
+        type: DataTypes.INTEGER,
+        allowNull: true
     },
     flightTime: {
+        // type: DataTypes.STRING,
         type: DataTypes.TIME,
-    },
-    international: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false
+        allowNull: true
     },
     date: {
         type: DataTypes.DATEONLY,
-        allowNull: false
-    }
+        allowNull: true
+    },
+    international: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true
+    },
 })

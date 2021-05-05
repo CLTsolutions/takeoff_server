@@ -1,20 +1,19 @@
 const User = require('./User')
 const Flight = require('./Flight')
-const Review = require('./Review')
+const Blog = require('./Blog')
 
 //db association sets up here
 User.hasMany(Flight) //flight is model
 Flight.belongsTo(User) //sets up extra column in table
 
-User.hasMany(Review)
-Review.belongsTo(User)
+User.hasMany(Blog)
+Blog.belongsTo(User)
 
-Flight.hasOne(Review)
-Review.belongsTo(Flight)
-
+Flight.hasOne(Blog)
+Blog.belongsTo(Flight)
 
 module.exports = {
-    User,
-    Flight,
-    Review
+  User,
+  Flight,
+  Blog,
 }
