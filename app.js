@@ -19,7 +19,7 @@ app.use('/blog', controllers.Blog)
 
 db.authenticate()
   .then(() => db.sync())
-  // .then(() => db.sync({force: true}))
+  // .then(() => db.sync({ force: true }))
   .then(() => {
     app.listen(
       process.env.PORT,

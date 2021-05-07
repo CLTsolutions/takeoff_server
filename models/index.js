@@ -9,9 +9,6 @@ Flight.belongsTo(User) //sets up extra column in table
 User.hasMany(Blog)
 Blog.belongsTo(User)
 
-Flight.hasOne(Blog)
-Blog.belongsTo(Flight)
-
 module.exports = {
   User,
   Flight,

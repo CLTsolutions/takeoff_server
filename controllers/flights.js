@@ -3,9 +3,9 @@ const validateSession = require('../middleware/validate-jwt')
 const { User, Flight } = require('../models/index')
 
 /**********
-* CREATE *
-***********/
-router.post('/', validateSession, async (req, res) => {
+ * CREATE *
+ ***********/
+router.post('/', async (req, res) => {
   try {
     const result = await Flight.create({
       airline: req.body.airline,
@@ -25,11 +25,11 @@ router.post('/', validateSession, async (req, res) => {
   }
 })
 
-/********************
+/*********************
  * GET ALL BY USER ID *
  ********************/
 // 'uid' so I remember grabbing by user id, NOT flight id
-router.get('/user/:uid', validateSession, async (req, res) => {
+router.get('/user/:uid', async (req, res) => {
   const { uid } = req.user
   try {
     // eager loading (1 query instead of 2 (faster performance))
@@ -72,8 +72,8 @@ router.get('/', async (req, res) => {
 /*******************
  * GET ALL BY USER *
  *******************/
- router.get('/mine', validateSession, async (req, res) => {
-  // const { id } = req.user
+router.get('/mine', async (req, res) => {
+  // const { id } = req.user.id
   try {
     const all = await Flight.findAll({ where: { userId: req.user.id } })
     if (all.length === 0) {
@@ -91,7 +91,7 @@ router.get('/', async (req, res) => {
 /************
  * GET ONE *
  ************/
-router.get('/:id', validateSession, async (req, res) => {
+router.get('/:id', async (req, res) => {
   const { id } = req.params
   try {
     const one = await Flight.findOne({ where: { id: id } })
@@ -108,7 +108,7 @@ router.get('/:id', validateSession, async (req, res) => {
 /***********
  * UPDATE *
  ***********/
-router.put('/:id', validateSession, async (req, res) => {
+router.put('/:id', async (req, res) => {
   const { id } = req.params
   try {
     const update = {
@@ -137,7 +137,7 @@ router.put('/:id', validateSession, async (req, res) => {
 /**********
  * DELETE *
  **********/
-router.delete('/:id', validateSession, async (req, res) => {
+router.delete('/:id', async (req, res) => {
   const { id } = req.params
   try {
     const result = await Flight.destroy({ where: { id: id } })

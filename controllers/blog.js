@@ -1,15 +1,19 @@
 const router = require('express').Router()
-const { Flight, Blog, User } = require('../models/index')
+const { Blog, User } = require('../models/index')
 
 /***************
  * CREATE *
  ****************/
 router.post('/', async (req, res) => {
-  // const { blog } = req.body.blog
-  const { blog } = req.body
-  const { userId, flightId } = req.body
+  const { title, date, entry } = req.body
+  const { id } = req.user
   try {
-    const result = await Blog.create({ blog, flightId, userId })
+    const result = await Blog.create({
+      title,
+      date,
+      entry,
+      userId: id,
+    })
     res.status(200).json({ message: 'Blog created successfully.', result })
   } catch (err) {
     res.status(500).json({ message: 'Blog was not created.', error: err })
@@ -17,45 +21,17 @@ router.post('/', async (req, res) => {
 })
 
 /**********************
- * GET ALL BY FLIGHT *
- ***********************/
-// 'fid' so I remember grabbing by flight id, NOT blog id
-router.get('/flight/:fid', async (req, res) => {
-  const { fid } = req.params
-  try {
-    const flight = await Flight.findOne({
-      where: { id: fid },
-      include: Blog,
-    })
-    if (flight === null) {
-      res.status(404).json({ message: 'Flight not found.' })
-    } else if (flight.blog === null) {
-      res.status(404).json({ message: 'Flight has no blog. Try creating one.' })
-    } else {
-      res.status(200).json(flight)
-    }
-  } catch (err) {
-    res.status(500).json({ message: 'Error retrieving blogs.', error: err })
-  }
-})
-
-/**********************
  * GET ALL BY USER *
  ***********************/
-// 'uid' so I remember grabbing by user id, NOT blog id
-router.get('/user', async (req, res) => {
-  const { id } = req.params
+router.get('/mine', async (req, res) => {
   try {
-    const user = await User.findOne({
-      where: { id: id },
-      include: [{ model: Blog, include: Flight }],
+    const all = await Blog.findAll({
+      where: { userId: req.user.id },
     })
-    if (user === null) {
-      res.status(404).json({ message: 'User not found.' })
-    } else if (user.blogs.length === 0) {
-      res.status(404).json({ message: 'User has no blogs. Try creating one.' })
+    if (all.length === 0) {
+      res.status(404).json({ message: 'Blogs not found.' })
     } else {
-      res.status(200).json(user)
+      res.status(200).json(all)
     }
   } catch (err) {
     res.status(500).json({ message: 'Error retrieving blogs.', error: err })
@@ -99,11 +75,9 @@ router.get('/:id', async (req, res) => {
  * UPDATE *
  ****************/
 router.put('/:id', async (req, res) => {
-  // const { blog } = req.body.blog
   const { blog } = req.body
   const { id } = req.params
   const update = { blog: blog }
-
   try {
     const result = await Blog.update(update, { where: { id: id } })
     if (result[0] === 0) {
