@@ -75,10 +75,11 @@ router.get('/:id', async (req, res) => {
  * UPDATE *
  ****************/
 router.put('/:id', async (req, res) => {
-  const { blog } = req.body
+  // const { blog } = req.body
+  const { title, date, entry } = req.body
   const { id } = req.params
-  const update = { blog: blog }
   try {
+    const update = { title, date, entry }
     const result = await Blog.update(update, { where: { id: id } })
     if (result[0] === 0) {
       res.status(404).json({ message: 'No blog found.' })
