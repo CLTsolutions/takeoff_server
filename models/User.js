@@ -21,5 +21,6 @@ module.exports = db.define('user', {
   },
   userRole: {
     type: DataTypes.STRING,
+    allowNull: false,
   },
 })
